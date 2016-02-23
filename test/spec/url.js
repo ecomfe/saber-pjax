@@ -1,3 +1,8 @@
+/**
+ * @file url spec
+ * @author wuhuiyao(sparklewhy@gmail.com)
+ */
+
 define(function (require) {
     var urlUtil = require('saber-pjax/pjax/url');
 

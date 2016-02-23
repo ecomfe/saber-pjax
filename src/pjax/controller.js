@@ -146,11 +146,11 @@ define(function (require) {
      *
      * @param {Object} state 当前访问的页面的状态信息
      * @param {string} path 当前访问的页面的 path
-     * @param {boolean} cached 是否缓存当前访问的页面
+     * @param {boolean} forceCache 是否强制缓存当前访问的页面
      * @return {string}
      */
-    exports.getViewportURL = function (state, path, cached) {
-        return cached ? path : (path + '?' + state.id);
+    exports.getViewportURL = function (state, path, forceCache) {
+        return forceCache ? path : (path + '?' + state.id);
     };
 
     /**
@@ -160,7 +160,7 @@ define(function (require) {
      * @return {boolean}
      */
     exports.isNeedCache = function (route) {
-        return route.cached || route.navOpts.state.pjax;
+        return !route.noCache && (route.cached || route.navOpts.state.pjax);
     };
 
     /**
@@ -182,7 +182,7 @@ define(function (require) {
      * @param {Object} action 要缓存的 action
      */
     exports.addCache = function (action) {
-        if (action.cached) {
+        if (action.forceCache) {
             _forceCacheActionMap[action.path] = action;
             return;
         }
@@ -252,6 +252,7 @@ define(function (require) {
         if (action && action !== curAction) {
             action.dispose();
         }
+        delete _forceCacheActionMap[path];
         viewport.delCache(viewportUrl);
     };
 

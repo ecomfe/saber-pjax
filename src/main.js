@@ -44,7 +44,10 @@ define(function (require) {
      * @param {Object} route 路由信息
      */
     function finishLoad(route) {
-        route.done();
+        if (!route.isDone) {
+            route.isDone = true;
+            route.done();
+        }
     }
 
     /**
@@ -98,7 +101,7 @@ define(function (require) {
         !firstScreen && (page.main.innerHTML = pageInfo.content || '');
 
         action.state = route.navOpts.state;
-        action.cached = route.cached;
+        action.forceCache = route.cached && !route.noCache;
         action.set(route.path);
 
         // 视图与数据已经 ready 了 跳过enter
@@ -184,6 +187,10 @@ define(function (require) {
          * @inner
          */
         var finishTransition = function () {
+            if (route.isDone) {
+                return;
+            }
+
             if (action) {
                 finishActionInit(route, action);
                 controller.initScrollPosition(route.navOpts);
@@ -199,6 +206,10 @@ define(function (require) {
          * @return {Promise}
          */
         var enterFail = function () {
+            if (route.isDone) {
+                return;
+            }
+
             fireEvent('error', arguments[0]);
             return startTransition({error: true});
         };
@@ -216,7 +227,7 @@ define(function (require) {
      * @inner
      * @param {Object} route 路由信息
      * @param {string} route.path 请求路径
-     * @param {Object} route.action action配置
+     * @param {Object} route.action action 配置
      * @param {Object} route.query 查询条件
      * @param {boolean=} route.cached 是否缓存action
      * @param {Object=} route.transition 转场配置
@@ -227,37 +238,28 @@ define(function (require) {
      */
     function enterAction(route, action) {
         var options = route.options || {};
+        var navOpts = route.navOpts;
         var page;
+        var curPage = {
+            route: cur.route,
+            action: cur.action,
+            page: cur.page
+        };
+        var toShowPage = {
+            route: route
+        };
         var fireEvent = function (eventName) {
             // 触发全局事件
-            exports.emit(eventName, {
-                route: route,
-                action: action,
-                page: page
-            }, {
-                route: cur.route,
-                action: cur.action,
-                page: cur.page
-            }, arguments[1]);
+            toShowPage.action = action;
+            toShowPage.page = page;
+            exports.emit(eventName, toShowPage, curPage, arguments[1]);
         };
-
-        // 触发 beforeload 事件
-        fireEvent('beforeload');
-
-        // 首先尝试从 cache 中取 action 没有从 cache 中获取到 action 就创建
-        var navOpts = route.navOpts;
-        var firstScreen = navOpts.firstScreen;
-        var loadActionPromise = action
-            ? Resolver.resolved(action)
-            : mm.create(route.action);
-        var loadPageContent = firstScreen
-            ? Resolver.resolved(firstScreen)
-            : controller.fetchPjaxContent(navOpts, options, action && action.state);
 
         // 在转场结束时触发 afterlaod 事件
         var cached = route.needCache;
         var pageUrl = controller.getViewportURL(navOpts.state, route.path, route.cached);
         var transition;
+        var firstScreen = navOpts.firstScreen;
         if (firstScreen) {
             page = viewport.front(
                 pageUrl,
@@ -289,9 +291,24 @@ define(function (require) {
             transition = createPageTransition(route, page, fireEvent, timer);
         }
 
+        // 触发 beforeload 事件
+        fireEvent('beforeload');
+
+        // 首先尝试从 cache 中取 action 没有从 cache 中获取到 action 就创建
+        var loadActionPromise = action
+            ? Resolver.resolved(action)
+            : mm.create(route.action);
+        var loadPageContent = firstScreen
+            ? Resolver.resolved(firstScreen)
+            : controller.fetchPjaxContent(navOpts, options, action && action.state);
+
         Resolver.all([loadActionPromise, loadPageContent])
             .then(
                 function (result) {
+                    if (route.isDone) {
+                        return;
+                    }
+
                     action = result[0];
                     var promise = initAction(route, result, page, firstScreen);
                     var start = transition.start;

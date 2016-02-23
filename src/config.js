@@ -84,8 +84,10 @@ define({
     /**
      * 加载Action超时时间（毫秒）
      * 超过此时间可以切换Action
+     * 这里时间包括加载异步 action 跟 拉取 pjax 页面时间，两个请求是并发的，考虑到移动端慢速
+     * 网络下，时间会比较长，这里，相比 saber-firework 默认超时时间更长
      *
      * @type {number}
      */
-    timeout: 15000
+    timeout: 5000
 });
