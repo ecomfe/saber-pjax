@@ -8,7 +8,6 @@
 // 引入 rider 支持
 var epr = require('./edp-rider-config');
 var riderUI = require('rider-ui');
-var autoresponse = require('autoresponse');
 
 // 指定匹配版本的 stylus
 exports.stylus = epr.stylus;
@@ -64,21 +63,6 @@ exports.getLocations = function () {
                 markdown()
             ]
         },
-
-        // 添加 mock 处理器
-        autoresponse('edp', {
-            logLevel: 'debug',
-            root: require('path').join(__dirname, 'demo'),
-            get: {
-                match: function (reqPathName) { // mock all `/xx/xx` path
-                    return !/\.\w+$/.test(reqPathName);
-                },
-                mock: function (reqURL) {
-                    var path = reqURL.pathname.replace(/^\/+/, '') || 'index';
-                    return path + '.js';
-                }
-            }
-        }),
 
         {
             location: /^.*$/,

@@ -15,18 +15,26 @@
     <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/1-6-10/esl.js"></script>
 </head>
 <body>
+<div class="wrapper">
+    <div class="viewport">
+        <div class="index">index page</div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="viewport-fs"><h1>Hello</h1></div>
+</div>
 <script>
     require.config({
         baseUrl: '.',
         packages: [
             {
                 name: 'etpl',
-                location: '../dep/etpl/3.0.1/src',
+                location: 'dep/etpl/3.0.0/src',
                 main: 'main'
             },
             {
                 name: 'fastclick',
-                location: '../dep/fastclick/1.0.6/src',
+                location: '.',
                 main: 'fastclick'
             },
             {
@@ -36,47 +44,47 @@
             },
             {
                 name: 'saber-dom',
-                location: '../dep/saber-dom/1.0.0/src',
+                location: 'dep/saber-dom/1.0.0/src',
                 main: 'main'
             },
             {
                 name: 'saber-emitter',
-                location: '../dep/saber-emitter/2.0.0/src',
+                location: 'dep/saber-emitter/2.0.0/src',
                 main: 'emitter'
             },
             {
                 name: 'saber-lang',
-                location: '../dep/saber-lang/2.0.1/src',
+                location: 'dep/saber-lang/2.0.1/src',
                 main: 'main'
             },
             {
                 name: 'saber-mm',
-                location: '../dep/saber-mm/1.0.1/src',
+                location: 'dep/saber-mm/1.0.1/src',
                 main: 'main'
             },
             {
                 name: 'saber-promise',
-                location: '../dep/saber-promise/2.0.0/src',
+                location: 'dep/saber-promise/2.0.0/src',
                 main: 'promise'
             },
             {
                 name: 'saber-run',
-                location: '../dep/saber-run/1.0.0/src',
+                location: 'dep/saber-run/1.0.0/src',
                 main: 'main'
             },
             {
                 name: 'saber-string',
-                location: '../dep/saber-string/1.0.0/src',
+                location: 'dep/saber-string/1.0.0/src',
                 main: 'main'
             },
             {
                 name: 'saber-viewport',
-                location: '../dep/saber-viewport/1.1.0/src',
+                location: 'dep/saber-viewport/1.1.0/src',
                 main: 'main'
             },
             {
                 name: 'saber-widget',
-                location: '../dep/saber-widget/1.0.0/src',
+                location: 'dep/saber-widget/1.0.0/src',
                 main: 'main'
             },
             {
@@ -89,7 +97,8 @@
 
     require(
         [
-            'spec/url'
+            'spec/url',
+            'spec/main'
         ]
     );
 </script>

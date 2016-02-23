@@ -473,7 +473,12 @@ define(function (require) {
         if (root && root.charAt(0) !== '/') {
             options.root = '/' + root;
         }
-        extend(config, options);
+        Object.keys(config).forEach(function (key) {
+            var value = options[key];
+            if (value !== undefined) {
+                config[key] = value;
+            }
+        });
     };
 
     /**

@@ -4,8 +4,9 @@
   "description": "Saber Pjax framework for multiple pages app",
   "main": "main",
   "scripts": {
-    "test": "phantomjs test/run-jasmine.js test/runner.html",
-    "pre-release": "npm test"
+    "pretest": "node test/install; node test/ws.js start",
+    "test": "phantomjs test/run-jasmine.js http://localhost:8848/test/runner.html",
+    "posttest": "node test/ws.js stop"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "dependencies": {
     "fastclick": "^1.0.6",
     "saber-lang": "^2.0.1",
+    "saber-ajax": "^2.1.0",
     "saber-dom": "^1.0.0",
     "saber-emitter": "^2.0.0",
     "saber-promise": "^2.0.0",
@@ -36,7 +38,6 @@
     "saber-viewport": "^1.1.0"
   },
   "devDependencies": {
-    "autoresponse": "^0.1.6",
     "edp-provider-rider": "^2.0.0",
     "phantomjs-prebuilt": "^2.1.4",
     "rider-ui": "^0.1.2"

@@ -540,7 +540,7 @@ define(function (require) {
         }
         else {
             paths.forEach(function (item) {
-                globalConfig.router.add(item.path, routeTo(item));
+                globalConfig.router.add(item.path, routeTo(item), item);
             });
         }
     };
@@ -571,13 +571,7 @@ define(function (require) {
             router.add(item.path, routeTo(item), item);
         });
 
-        router.config({
-            index: config.index,
-            root: config.root,
-            maxCacheSize: config.maxCacheSize,
-            fetch: config.fetch,
-            firstScreenData: config.firstScreenData
-        });
+        router.config(config);
 
         // 启动路由
         router.start();
@@ -622,6 +616,16 @@ define(function (require) {
                 filters.splice(index, 1);
             }
         }
+    };
+
+    /**
+     * 删除缓存的action
+     *
+     * @public
+     * @param {string} path 路径
+     */
+    exports.delCachedAction = function () {
+        controller.clearCache(cur.action);
     };
 
     /**
