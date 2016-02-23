@@ -70,7 +70,12 @@ define(function (require) {
             // 已经存在这个参数，且新的值不为空时，把原来的值变成数组
             if (query.hasOwnProperty(key)) {
                 if (value !== true) {
-                    query[key] = [].concat(query[key], value);
+                    if (query[key] === true) {
+                        query[key] = value;
+                    }
+                    else {
+                        query[key] = [].concat(query[key], value);
+                    }
                 }
             }
             else {
@@ -97,11 +102,13 @@ define(function (require) {
             if (query.hasOwnProperty(key)) {
                 var value = query[key];
 
-                // 如果`value` 是数组，其 `toString` 会自动转为逗号分隔的字符串
-                search.push(
-                    encodeURIComponent(key) + '='
-                    + encodeURIComponent(value)
-                );
+                if (value !== undefined) {
+                    // 如果`value` 是数组，其 `toString` 会自动转为逗号分隔的字符串
+                    search.push(
+                        encodeURIComponent(key) + '='
+                        + encodeURIComponent(value)
+                    );
+                }
             }
         }
 
