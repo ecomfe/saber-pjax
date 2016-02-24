@@ -31,8 +31,11 @@ define(function (require) {
      */
     var _currState;
 
+    var counter = 0;
     function uniqueId() {
-        return Date.now();
+        // 为了避免程序多次调用 redirect 时候，获取时间可能一样问题，
+        // 这里再加上个自增计数器，确保不一样
+        return Date.now() + (counter++);
     }
 
     /**
@@ -276,7 +279,7 @@ define(function (require) {
     function ignoreRoot(url) {
         var root = config.root;
         if (url.charAt(0) === '/' && root && url.indexOf(root) === 0) {
-            url = url.replace(root, '');
+            url = '/' + url.replace(root, '');
         }
 
         return url;
@@ -352,14 +355,15 @@ define(function (require) {
         function finish() {
             _pending = false;
             if (_waitingRoute) {
-                applyRoute(_waitingRoute.url, _waitingRoute.navOpts, _waitingRoute.options);
+                var route = extend({}, _waitingRoute);
                 _waitingRoute = null;
+                applyRoute(route.url, route.navOpts, route.options);
             }
         }
 
         // 如果当前 url 跟要 push 一样，不添加。
         var urlInfo = parseURL(url);
-        if (_support && navOpts.push && !navOpts.replace
+        if (exports.isSupportPjax() && navOpts.push && !navOpts.replace
             && window.location.href !== urlInfo.href
         ) {
             window.history.pushState(null, '', url);
@@ -465,20 +469,29 @@ define(function (require) {
      */
     exports.config = function (options) {
         options = options || {};
-        // 修正root，添加头部的`/`并去掉末尾的'/'
+        // 修正root，添加头部的`/` 和 末尾的'/'
         var root = options.root;
-        if (root && root.charAt(root.length - 1) === '/') {
-            root = options.root = root.substring(0, root.length - 1);
+        var slash = '/';
+        if (root) {
+            var lastIdx = root.length - 1;
+            if (root.charAt(lastIdx) !== slash) {
+                root += slash;
+            }
+            if (root.charAt(0) !== slash) {
+                root = slash + root;
+            }
         }
-        if (root && root.charAt(0) !== '/') {
-            options.root = '/' + root;
-        }
+
         Object.keys(config).forEach(function (key) {
             var value = options[key];
             if (value !== undefined) {
                 config[key] = value;
             }
         });
+
+        if (root) {
+            config.root = root;
+        }
     };
 
     /**
@@ -562,7 +575,7 @@ define(function (require) {
             title: document.title
         };
 
-        if (_support && !_enabled) {
+        if (exports.isSupportPjax() && !_enabled) {
             // 初始化当前访问的页面的状态
             var initialState = window.history.state;
             if (initialState && initialState.url) {
@@ -603,10 +616,16 @@ define(function (require) {
      *
      * @public
      * @param {string=} url 要 reload url，可选，默认当前访问的 url
+     * @param {boolean=} force 是否强制刷新给定的 url
      */
-    exports.reload = function (url) {
+    exports.reload = function (url, force) {
+        if (url && force) {
+            window.location.href = url;
+            return;
+        }
+
         if (url) {
-            _support && window.history.replaceState(null, '', url);
+            exports.isSupportPjax() && window.history.replaceState(null, '', url);
             window.location.replace(url);
         }
         else {
@@ -637,10 +656,10 @@ define(function (require) {
         var silent = options.silent;
         if (exports.isSupportPjax(urlInfo)) {
             var navOpt = {
-                url: url,
+                url: urlInfo.href,
                 state: {
                     id: uniqueId(),
-                    url: url,
+                    url: urlInfo.href,
                     pjax: true
                 },
                 prevState: _currState,
@@ -660,12 +679,7 @@ define(function (require) {
             applyRoute(urlInfo, navOpt, options);
         }
         else {
-            if (silent) {
-                exports.reload(url);
-            }
-            else {
-                window.location.href = url;
-            }
+            exports.reload(url, !silent);
         }
     };
 

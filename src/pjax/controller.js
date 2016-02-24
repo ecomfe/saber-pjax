@@ -68,7 +68,7 @@ define(function (require) {
      */
     function abort() {
         if (_request) {
-            _request.abort();
+            _request.abort && _request.abort();
             _request = null;
         }
     }
