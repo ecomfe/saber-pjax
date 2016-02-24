@@ -39,6 +39,8 @@ saberPjax.load([
 saberPjax.start('viewport', config);
 ```
 
+更多使用例子，可以参考 `test case` 和 `demo`。
+
 ## saber-pjax vs saber-firworks
 
 `saber-pjax` 基于 `pjax` 技术进行导航路由，路由实现跟 `saber` 同构版 `rebase` 类似，都是基于 html5 history api，并通过拦截链接点击来进行路由导航控制。
@@ -107,3 +109,8 @@ saberPjax.start('viewport', config);
     * noCache `boolean` `optional`: 是否强制不缓存，框架默认历史前进后退会使用缓存，可以通过该选项来强制不使用缓存
     
     * pjax `boolean` `optional`: 是否对当前路由禁用 `pjax` 导航，默认都是支持的，对于不支持的路由，访问该链接，会导致页面重新加载，而不是通过发送 `ajax` 请求进行页面局部区域的更新。
+
+
+## Reference
+
+关于 `saber` 使用更多文档可以参考 [这里](http://ecomfe.github.io/saber/doc/)。
