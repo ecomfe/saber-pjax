@@ -1,0 +1,37 @@
+{
+  "name": "saber-pjax",
+  "version": "0.1.0",
+  "description": "Saber Pjax framework for multiple pages app",
+  "main": "main",
+  "maintainers": [
+    {
+      "name": "wuhuiyao",
+      "email": "sparklewhy@gmail.com"
+    }
+  ],
+  "dependencies": {
+      "fastclick": "^1.0.6",
+      "saber-lang": "^2.0.1",
+      "saber-ajax": "^2.1.0",
+      "saber-dom": "^1.0.0",
+      "saber-emitter": "^2.0.0",
+      "saber-promise": "^2.0.0",
+      "saber-mm": "^1.0.1",
+      "saber-viewport": "^1.1.0"
+  },
+  "devDependencies": {
+      "phantomjs-prebuilt": "^2.1.4"
+  },
+  "license": "MIT",
+  "repository": "git://github.com/ecomfe/saber-pjax.git",
+  "bugs": "https://github.com/ecomfe/saber-pjax/issues",
+  "ignore": [
+    "**/.*", "**/edp-*.js",
+    "node_modules",
+    "bower_components",
+    "lib",
+    "test",
+    "doc",
+    "demo"
+  ]
+}
