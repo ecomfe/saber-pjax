@@ -40,7 +40,7 @@ define(function (require) {
         };
     }
 
-    function getActionEventsConf(actionEvents) {
+    function getActionEventsConf(actionEvents, data) {
         return {
             init: function () {
                 actionEvents.push('init');
@@ -49,6 +49,7 @@ define(function (require) {
                 actionEvents.push('enter');
             },
             ready: function () {
+                data && (data.data = this.model.getSyncData());
                 actionEvents.push('ready');
             },
             complete: function () {
@@ -66,33 +67,105 @@ define(function (require) {
         };
     }
 
+    function testActionWaiting(firework, main) {
+        describe('test multiple actions wating', function () {
+            var WAITE_TIME = 100;
+
+            it('wait other action', function (done) {
+                var p1 = extend({}, require('page/src/foo'));
+                var p2 = extend({}, require('page/src/foo'));
+                p1.events = {
+                    ready: jasmine.createSpy('p11')
+                };
+                p2.events = {
+                    ready: jasmine.createSpy('p12')
+                };
+                firework.load({path: '/test/page/foo1.html', action: p1});
+                firework.load({path: '/test/page/foo2.html', action: p2});
+
+                router.redirect('/test/page/foo1.html');
+                router.redirect('/test/page/foo2.html');
+
+                expect(p1.events.ready).not.toHaveBeenCalled();
+                expect(p2.events.ready).not.toHaveBeenCalled();
+
+                setTimeout(function () {
+                    expect(p1.events.ready).toHaveBeenCalled();
+                    expect(p2.events.ready).toHaveBeenCalled();
+
+                    expect(main.innerHTML.replace(/\s+/g, ''))
+                        .toEqual('<div><div>foo2</div></div>');
+
+                    done();
+                }, WAITE_TIME * 10);
+            });
+
+            it('only wait the last action', function (done) {
+                var p1 = extend({}, require('page/src/foo'));
+                var p2 = extend({}, require('page/src/foo'));
+                var p3 = extend({}, require('page/src/foo'));
+                p1.events = {
+                    ready: jasmine.createSpy('p1')
+                };
+                p2.events = {
+                    ready: jasmine.createSpy('p2')
+                };
+                p3.events = {
+                    ready: jasmine.createSpy('p3')
+                };
+                firework.load({path: '/test/page/foo4.html', action: p1});
+                firework.load({path: '/test/page/foo5.html', action: p2});
+                firework.load({path: '/test/page/foo6.html', action: p3});
+
+                router.redirect('/test/page/foo4.html');
+                router.redirect('/test/page/foo5.html');
+                router.redirect('/test/page/foo6.html');
+
+                expect(p1.events.ready).not.toHaveBeenCalled();
+                expect(p2.events.ready).not.toHaveBeenCalled();
+                expect(p3.events.ready).not.toHaveBeenCalled();
+
+                setTimeout(function () {
+                    expect(p1.events.ready).toHaveBeenCalled();
+                    expect(p2.events.ready).not.toHaveBeenCalled();
+                    expect(p3.events.ready).toHaveBeenCalled();
+
+                    expect(main.innerHTML.replace(/\s+/g, ''))
+                        .toEqual('<div><div>foo6</div></div>');
+
+                    done();
+                }, WAITE_TIME);
+            });
+        });
+    }
+
     describe('main', function () {
 
         describe('app', function () {
             var main = document.querySelector('.viewport');
             // 等待Action加载的时间
-            var WAITE_TIME = 300;
+            var WAITE_TIME = 100;
             var actionEvents = [];
             var viewEvents = [];
             var viewConf = {events: getViewEventsConf(viewEvents)};
+            var firstScreenInfo = {};
             var actionConf = {
                 model: {},
                 view: viewConf,
-                events: getActionEventsConf(actionEvents)
+                events: getActionEventsConf(actionEvents, firstScreenInfo)
             };
             firework.load({path: '/test/runner.html', action: actionConf});
-            firework.start(main);
+            firework.start(main, {
+                firstScreenData: {
+                    type: 'firstScreen',
+                    a: 3
+                }
+            });
 
             function clear() {
                 firework.delCachedAction();
                 router.clear();
                 firework.load({path: '/test/runner.html', action: actionConf});
-                //firework.load({path: '/test/runner.html', action: require('mock/index')});
-                //firework.load({path: '/pjax/index.html', action: require('mock/index')});
-                //router.redirect('/', null, {force: true});
-                //window.location.replace('/test/runner.html');
-                // 等待一下，完成index页面的加载
-                //setTimeout(done, WAITE_TIME);
             }
 
             describe('load page', function () {
@@ -100,6 +173,10 @@ define(function (require) {
                 it('init', function (done) {
                     expect(actionEvents).toEqual(['init', 'ready', 'complete']);
                     expect(viewEvents).toEqual(['init', 'ready']);
+                    expect(firstScreenInfo.data).toEqual({
+                        type: 'firstScreen',
+                        a: 3
+                    });
                     done();
                 });
 
@@ -123,6 +200,7 @@ define(function (require) {
                         expect(pjaxViewEvents1).toEqual(['init', 'ready']);
                         expect(actionEvents).toEqual(['sleep']);
                         expect(viewEvents).toEqual(['sleep']);
+                        expect(window.location.href).toEqual('http://localhost:8848/test/page/pjax1.html');
                         expect(main.innerHTML.replace(/\s+/g, ''))
                             .toEqual('<div><div>page1</div></div>');
 
@@ -137,6 +215,7 @@ define(function (require) {
                     setTimeout(function () {
                         expect(actionEvents).toEqual(['revived', 'complete']);
                         expect(viewEvents).toEqual(['revived']);
+                        expect(window.location.href).toEqual('http://localhost:8848/test/runner.html');
                         expect(main.innerHTML.trim())
                             .toEqual('<div><div class="index">index page</div></div>');
                         done();
@@ -377,72 +456,6 @@ define(function (require) {
                     }, WAITE_TIME);
                 });
 
-                it('wait other action', function (done) {
-                    var p1 = extend({}, require('page/src/foo'));
-                    var p2 = extend({}, require('page/src/foo'));
-                    p1.events = {
-                        ready: jasmine.createSpy('p1')
-                    };
-                    p2.events = {
-                        ready: jasmine.createSpy('p2')
-                    };
-                    firework.load({path: '/test/page/foo1.html', action: p1});
-                    firework.load({path: '/test/page/foo2.html', action: p2});
-
-                    router.redirect('/test/page/foo1.html');
-                    router.redirect('/test/page/foo2.html');
-
-                    expect(p1.events.ready).not.toHaveBeenCalled();
-                    expect(p2.events.ready).not.toHaveBeenCalled();
-
-                    setTimeout(function () {
-                        expect(p1.events.ready).toHaveBeenCalled();
-                        expect(p2.events.ready).toHaveBeenCalled();
-
-                        expect(main.innerHTML.replace(/\s+/g, ''))
-                            .toEqual('<div><div>foo2</div></div>');
-
-                        done();
-                    }, WAITE_TIME);
-                });
-
-                it('only wait the last action', function (done) {
-                    var p1 = extend({}, require('page/src/foo'));
-                    var p2 = extend({}, require('page/src/foo'));
-                    var p3 = extend({}, require('page/src/foo'));
-                    p1.events = {
-                        ready: jasmine.createSpy('p1')
-                    };
-                    p2.events = {
-                        ready: jasmine.createSpy('p2')
-                    };
-                    p3.events = {
-                        ready: jasmine.createSpy('p3')
-                    };
-                    firework.load({path: '/test/page/foo4.html', action: p1});
-                    firework.load({path: '/test/page/foo5.html', action: p2});
-                    firework.load({path: '/test/page/foo6.html', action: p3});
-
-                    router.redirect('/test/page/foo4.html');
-                    router.redirect('/test/page/foo5.html');
-                    router.redirect('/test/page/foo6.html');
-
-                    expect(p1.events.ready).not.toHaveBeenCalled();
-                    expect(p2.events.ready).not.toHaveBeenCalled();
-                    expect(p3.events.ready).not.toHaveBeenCalled();
-
-                    setTimeout(function () {
-                        expect(p1.events.ready).toHaveBeenCalled();
-                        expect(p2.events.ready).not.toHaveBeenCalled();
-                        expect(p3.events.ready).toHaveBeenCalled();
-
-                        expect(main.innerHTML.replace(/\s+/g, ''))
-                            .toEqual('<div><div>foo6</div></div>');
-
-                        done();
-                    }, WAITE_TIME);
-                });
-
                 it('timeout', function (done) {
                     var config = require('saber-pjax/config');
                     config.timeout = 500;
@@ -479,47 +492,51 @@ define(function (require) {
 
                 });
 
+                testActionWaiting(firework, main);
+
                 describe('global events', function () {
 
                     it('beforeload -> beforetransition -> afterload', function (done) {
 
-                        var events = [];
-                        var backs = [];
-                        var fronts = [];
-
-                        firework.on('beforeload', function (back, front) {
-                            events.push('beforeload');
-                            backs.push(back);
-                            fronts.push(front);
-                        });
-
-                        firework.on('beforetransition', function (back, front) {
-                            events.push('beforetransition');
-                            backs.push(back);
-                            fronts.push(front);
-                        });
-
-                        firework.on('afterload', function (back, front) {
-                            events.push('afterload');
-                            backs.push(back);
-                            fronts.push(front);
-                        });
-
-                        router.redirect('/test/page/pjax1.html?spec=events');
-
+                        router.redirect('/test/page/pjax2.html');
                         setTimeout(function () {
-                            expect(events).toEqual(['beforeload', 'beforetransition', 'afterload']);
-                            expect(fronts[0].route.url).toEqual('http://localhost:8848/test/page/pjax2.html');
-                            expect(backs[0].route.url).toEqual('http://localhost:8848/test/page/pjax1.html?spec=events');
-                            expect(backs[0].route.query).toEqual({spec: 'events'});
-                            expect(fronts[0]).toBe(fronts[1]);
-                            expect(fronts[0]).toBe(fronts[2]);
-                            expect(backs[0]).toBe(backs[1]);
-                            expect(backs[0]).toBe(backs[2]);
-                            firework.off();
-                            done();
-                        }, WAITE_TIME);
+                            var events = [];
+                            var backs = [];
+                            var fronts = [];
 
+                            firework.on('beforeload', function (back, front) {
+                                events.push('beforeload');
+                                backs.push(back);
+                                fronts.push(front);
+                            });
+
+                            firework.on('beforetransition', function (back, front) {
+                                events.push('beforetransition');
+                                backs.push(back);
+                                fronts.push(front);
+                            });
+
+                            firework.on('afterload', function (back, front) {
+                                events.push('afterload');
+                                backs.push(back);
+                                fronts.push(front);
+                            });
+
+                            router.redirect('/test/page/pjax1.html?spec=events');
+
+                            setTimeout(function () {
+                                expect(events).toEqual(['beforeload', 'beforetransition', 'afterload']);
+                                expect(fronts[0].route.url).toEqual('http://localhost:8848/test/page/pjax2.html');
+                                expect(backs[0].route.url).toEqual('http://localhost:8848/test/page/pjax1.html?spec=events');
+                                expect(backs[0].route.query).toEqual({spec: 'events'});
+                                expect(fronts[0]).toBe(fronts[1]);
+                                expect(fronts[0]).toBe(fronts[2]);
+                                expect(backs[0]).toBe(backs[1]);
+                                expect(backs[0]).toBe(backs[2]);
+                                firework.off();
+                                done();
+                            }, WAITE_TIME);
+                        }, WAITE_TIME);
                     });
 
                     it('error should emit when load action fail', function (done) {
@@ -533,7 +550,6 @@ define(function (require) {
 
                         router.redirect('/error');
                     });
-
                 });
 
                 describe('filter', function () {
@@ -759,6 +775,8 @@ define(function (require) {
                 });
 
             });
+
+            require('./main2').test(firework, main);
 
         });
 
