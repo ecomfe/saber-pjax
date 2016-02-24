@@ -27,15 +27,17 @@
     }
   ],
   "license": "MIT",
-  "dependencies": {
-    "fastclick": "^1.0.6",
-    "saber-lang": "^2.0.1",
-    "saber-ajax": "^2.1.0",
-    "saber-dom": "^1.0.0",
-    "saber-emitter": "^2.0.0",
-    "saber-promise": "^2.0.0",
-    "saber-mm": "^1.0.1",
-    "saber-viewport": "^1.1.0"
+  "edp": {
+    "dependencies": {
+      "fastclick": "^1.0.6",
+      "saber-lang": "^2.0.1",
+      "saber-ajax": "^2.1.0",
+      "saber-dom": "^1.0.0",
+      "saber-emitter": "^2.0.0",
+      "saber-promise": "^2.0.0",
+      "saber-mm": "^1.0.1",
+      "saber-viewport": "^1.1.0"
+    }
   },
   "devDependencies": {
     "edp-provider-rider": "^2.0.0",
