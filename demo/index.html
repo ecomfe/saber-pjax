@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Pjax demo</title>
+    <link rel="stylesheet" href="./src/main.styl">
+    <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-1-4/esl.js"></script>
+    <script>
+    require.config({
+        baseUrl: 'src',
+        paths: {
+        },
+        packages: [
+            {
+                name: 'saber-pjax',
+                location: '../../src',
+                main: 'main'
+            },
+            {
+                name: 'etpl',
+                location: '../../dep/etpl/3.0.1/src',
+                main: 'main'
+            },
+            {
+                name: 'fastclick',
+                location: '../../dep/fastclick/1.0.6/src',
+                main: 'fastclick'
+            },
+            {
+                name: 'saber-ajax',
+                location: '../../dep/saber-ajax/2.1.0/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-dom',
+                location: '../../dep/saber-dom/1.0.0/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-emitter',
+                location: '../../dep/saber-emitter/2.0.0/src',
+                main: 'emitter'
+            },
+            {
+                name: 'saber-lang',
+                location: '../../dep/saber-lang/2.0.1/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-mm',
+                location: '../../dep/saber-mm/1.0.1/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-promise',
+                location: '../../dep/saber-promise/2.0.0/src',
+                main: 'promise'
+            },
+            {
+                name: 'saber-run',
+                location: '../../dep/saber-run/1.0.0/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-string',
+                location: '../../dep/saber-string/1.0.0/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-viewport',
+                location: '../../dep/saber-viewport/1.1.0/src',
+                main: 'main'
+            },
+            {
+                name: 'saber-widget',
+                location: '../../dep/saber-widget/1.0.0/src',
+                main: 'main'
+            }
+        ]
+
+    });
+    </script>
+</head>
+
+<body>
+
+<div id="viewport">
+    <div id="page1">
+        Hello index page. <button class="test">点我啊</button><br>
+        <a href="pjax.html">Pjax Page</a><br>
+        刘士余 1961年11月 出生在江苏灌云县一户普通农家，1987年 从清华大学水利工程系水利水电工程专业毕业。26 岁开启仕途之路。先后在上海市经济体制改革办公室、国家经济体制改革委员会、中国建设银行工作。1996年 他正值 35 岁，被调入人民银行，此后先后任银行司副司长、监管二司司长、办公厅主任、行长助理等职位。
+
+        2006年6月，也就是他 45 岁之际，出任央行副行长，官至副部级。在这一职位上一耕耘就是 8年，期间分管条法司、支付结算司、金融市场司、金融稳定局等部门。此后开始掌管农业银行，不到 2年，2016年2月20日，调任中国证监会主席，官至正部级。
+
+        可以看到，央行在刘士余履职生涯中占据了重要地位，因为他一呆就是 18年。
+
+        21 世纪的前十年，无论是银行业、亦或证券业的市场化改革起步不久，这一时期是我国金融体系改革的重要时期。而央行作为我国最高的货币金融管理组织机构，在我国金融体系中居于主导地位，对其它金融机构乃至金融业进行监督管理权限。诸多评论认为，18年 的央行生涯中，刘士余成为重要金融改革的开拓者和执行者。
+
+        在以下几大领域中，刘士余都是重要的参与者与支持者。我国金融市场国有银行股份制改革与上市、证券公司和信托公司等金融机构的危机处置、债券市场的建设与债市产品的创新。
+
+        尤其是在国有商业银行股份制改革和上市这一重要领域，刘士余是重要的开拓者和执行者。2003年 国有商业银行改革领导小组成立，央行行长周小川是办公室主任，刘士余是办公室副主任。
+
+        众所周知，我国以间接融资为主，银行的存款和借贷，一端系百姓生活，一端系数以万计企业的生存与发展。也因此，国有五大行的股份制改革 “牵一发而动全身”，是中国金融改革中的重中之重。但如何前行，谁也没有经验。作为五大行的 “上司”，央行责任任重而道远。一位金融高管曾向媒体披露：“一整套国有银行改革理论的筹备、研究制定方案设计、组织实施，周小川出战略出思想，而刘士余是重要的执行者。”
+
+        18年 的央行履职，刘士余深谙包括银行业在内金融监管。2014年，53 岁的他离开央行，掌舵农业银行，于当年年 底任农行党委书记、董事长，开启了由 “裁判员” 向 “运动员” 身份的转换。在他 55 岁之际，成为中国资本市场新一任 “长官”。
+
+        在过去 29年 的履职中，刘士余得到的评语多是：长袖善舞、勤勉，并敢于发声。对此诸多媒体已有报道。
+
+        譬如，在央行的内部评价中，刘士余善于平衡和协调各方面利益关系，对外协调人民银行和其他部委的矛盾，对内协调人民银行内部各司局的冲突。又如，央行人士透露，刘士余为人非常勤勉，经常看书到晚上两三点才睡觉，面对比较陌生的领域，都能很快掌握。
+
+        令市场人士印象深刻的是，在金融改革遇遭遇争议的风口浪尖时，刘士余多次出面澄清。早在 2014年 就有市场人士指出，“前几年关于国有银行贱卖论，近年对于互联网金融的争议，刘士余都在不同场合都给予专业的回应。对于很多官员来说，这在可做可不做的范畴。而刘的态度是不退缩、不回避。”<br>
+
+
+        <a href="pjax.html">Pjax Page</a><br>
+        <a href="cached.html">Cached Page</a><br>
+        <a href="refresh.html">Refresh Page</a><br>
+        <a href="normal.html">Normal Page</a><br>
+        <a href="index.html">Index Page</a><br>
+        互联网金融监管的探路者
+
+        刘士余任证监会新掌门，将带给资本市场怎样的未来？
+
+        对于刘士余出任新一任证监会主席，资本市场最为关注的是未来监管政策走向与变化。刘士余对外公开发言，谈及最多的或是互联网金融。
+
+        2005年 网络借贷在我国开始萌芽，第三方支付机构开始成长起来。从 2011年 央行下发第三方支付牌照开始，中国互联网金融的概念正式形成，并开始加速发展。在央行推进互联网金融的监管者中，刘士余最为市场熟知。比如，他曾力推向电信运营商发放移动支付牌照。
+
+        2012年，他开始集中调研互联网金融，并积极推进并积极推动《关于促进互联网金融健康发展的指导意见》的出台。在刘士余的带领下，市场一直对于监管部门如何划定和监管互联网金融充满着想象。
+    </div>
+</div>
+<div id="gmask" class="mask" style="display: none"></div>
+<div id="gloading" style="display: none">
+    <div class="dot dot-1"></div>
+    <div class="dot dot-2"></div>
+    <div class="dot dot-3"></div>
+    <div class="dot dot-4"></div>
+    <div class="dot dot-5"></div>
+    <div class="dot dot-6"></div>
+    <div class="dot dot-7"></div>
+    <div class="dot dot-8"></div>
+</div>
+<script>
+    require(['app'], function (app) {
+        app.init();
+    });
+</script>
+</body>
+</html>
