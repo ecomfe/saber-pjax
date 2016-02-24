@@ -5,18 +5,16 @@
 
 define(function (require) {
 
-    var firework = require('saber-pjax');
     var router = require('saber-pjax/pjax/router');
     var viewport = require('saber-viewport');
     var Resolver = require('saber-promise');
     var extend = require('saber-lang/extend');
 
+    // 等待Action加载的时间
+    var WAITE_TIME = 50;
 
     function testRouteEvents(firework, main, clear) {
         describe('route global events', function () {
-            // 等待Action加载的时间
-            var WAITE_TIME = 100;
-
             beforeEach(function () {
                 clear();
             });
@@ -99,6 +97,7 @@ define(function (require) {
                 };
                 router.on('popstate', popstateListener);
 
+                var WAITE_TIME = 100;
                 router.redirect('/test/page/foo.html');
                 setTimeout(function () {
                     router.redirect('/test/page/foo1.html');
@@ -133,9 +132,6 @@ define(function (require) {
 
     function testNotSupportPjax(firework, main, clear) {
         describe('not support pjax', function () {
-            // 等待Action加载的时间
-            var WAITE_TIME = 300;
-
             beforeEach(function () {
                 clear();
             });
@@ -172,8 +168,6 @@ define(function (require) {
 
     function testScroll(firework, main, clear) {
         describe('redirect with hash url', function () {
-            // 等待Action加载的时间
-            var WAITE_TIME = 300;
 
             beforeEach(function () {
                 clear();
@@ -229,9 +223,6 @@ define(function (require) {
 
     function testModelExtension(firework, main, clear) {
         describe('model extension api', function () {
-            // 等待Action加载的时间
-            var WAITE_TIME = 300;
-
             beforeEach(function () {
                 clear();
             });
@@ -315,9 +306,6 @@ define(function (require) {
 
     function testRouterOptions(firework, main, clear) {
         describe('router options', function () {
-            // 等待Action加载的时间
-            var WAITE_TIME = 300;
-
             beforeEach(function () {
                 clear();
             });

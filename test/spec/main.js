@@ -11,6 +11,9 @@ define(function (require) {
     var Resolver = require('saber-promise');
     var extend = require('saber-lang/extend');
 
+    // 等待Action加载的时间
+    var WAITE_TIME = 50;
+
     function getViewEventsConf(viewEvents) {
         return {
             init: function () {
@@ -69,8 +72,6 @@ define(function (require) {
 
     function testActionWaiting(firework, main) {
         describe('test multiple actions wating', function () {
-            var WAITE_TIME = 100;
-
             it('wait other action', function (done) {
                 var p1 = extend({}, require('page/src/foo'));
                 var p2 = extend({}, require('page/src/foo'));
@@ -93,8 +94,8 @@ define(function (require) {
                     expect(p1.events.ready).toHaveBeenCalled();
                     expect(p2.events.ready).toHaveBeenCalled();
 
-                    expect(main.innerHTML.replace(/\s+/g, ''))
-                        .toEqual('<div><div>foo2</div></div>');
+                    expect(main.innerHTML.trim().replace(/\s+<\/div>/g, '<\/div>'))
+                        .toEqual('<div class="foo"><div>foo2</div></div>');
 
                     done();
                 }, WAITE_TIME * 10);
@@ -130,8 +131,8 @@ define(function (require) {
                     expect(p2.events.ready).not.toHaveBeenCalled();
                     expect(p3.events.ready).toHaveBeenCalled();
 
-                    expect(main.innerHTML.replace(/\s+/g, ''))
-                        .toEqual('<div><div>foo6</div></div>');
+                    expect(main.innerHTML.trim().replace(/\s+<\/div>/g, '<\/div>'))
+                        .toEqual('<div class="foo"><div>foo6</div></div>');
 
                     done();
                 }, WAITE_TIME);
@@ -143,8 +144,6 @@ define(function (require) {
 
         describe('app', function () {
             var main = document.querySelector('.viewport');
-            // 等待Action加载的时间
-            var WAITE_TIME = 100;
             var actionEvents = [];
             var viewEvents = [];
             var viewConf = {events: getViewEventsConf(viewEvents)};
@@ -343,8 +342,8 @@ define(function (require) {
 
                     router.redirect('/test/page/foo.html');
                     setTimeout(function () {
-                        expect(main.innerHTML.replace(/\s+/g, ''))
-                            .toEqual('<div><div>foo</div></div>');
+                        expect(main.innerHTML.trim().replace(/\s+<\/div>/g, '<\/div>'))
+                            .toEqual('<div class="foo"><div>foo</div></div>');
 
                         done();
                     }, WAITE_TIME);
