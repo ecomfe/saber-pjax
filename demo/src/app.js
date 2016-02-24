@@ -6,8 +6,7 @@
 define(function (require) {
 
     var Resolver = require('saber-promise');
-    var firework = require('saber-pjax');
-    var ajax = require('saber-ajax');
+    var saberPjax = require('saber-pjax');
     var slide = require('saber-viewport/transition/slide');
 
     // FIXME
@@ -15,9 +14,7 @@ define(function (require) {
     // 关闭Promise的异常捕获，方便调试
     Resolver.disableExceptionCapture();
 
-    // saber-firework全局配置信息
-
-    // 设置路由器
+    // saber-pjax 全局配置信息
     var config = {
         processor: {
             /**
@@ -53,15 +50,15 @@ define(function (require) {
     };
 
     // 加载路由配置
-    firework.load(require('./config'));
+    saberPjax.load(require('./config'));
 
     var loading = require('./loading');
-    firework.on('beforeload', function (to, from) {
+    saberPjax.on('beforeload', function (to, from) {
         console.log(to.route.ubs);
         //loading.show();
     });
 
-    firework.on('afterload', function (to, from) {
+    saberPjax.on('afterload', function (to, from) {
         //loading.hide();
     });
 
@@ -69,7 +66,7 @@ define(function (require) {
         init: function (pageData) {
             // 启动应用
             config.firstScreenData = pageData;
-            firework.start('viewport', config);
+            saberPjax.start('viewport', config);
         }
     };
 
