@@ -77,6 +77,37 @@ define(function (require) {
     }
 
     /**
+     * model 接口扩展定义
+     *
+     * @type {Object}
+     */
+    var modelExtension = {
+
+        /**
+         * 获取同步数据信息
+         *
+         * @param {string=} key 要获取的同步数据 key 信息
+         * @return {*}
+         */
+        getSyncData: function (key) {
+            var data = this.get(globalConfig.syncDataKey) || {};
+            return key ? data[key] : data;
+        },
+
+        /**
+         * 获取页面查询参数信息
+         *
+         * @param {string=} key 要获取的查询 key 信息
+         * @return {*}
+         */
+        getPageQuery: function (key) {
+            var query = this.get(globalConfig.pageQueryKey) || {};
+            return key ? query[key] : query;
+        }
+    };
+
+
+    /**
      * 初始化当前路由的 action 实例
      *
      * @inner
@@ -88,8 +119,14 @@ define(function (require) {
      */
     function initAction(route, result, page, firstScreen) {
         var action = result[0];
+
+        // 同步下页面查询 query 信息
+        var pageQueryKey = globalConfig.pageQueryKey;
+        var queryInfo = route.query;
+        action.model.set(pageQueryKey, queryInfo);
+
         if (route.hasCache) {
-            return action.wakeup(route.path, route.query, route.options).then(
+            return action.wakeup(route.path, queryInfo, route.options).then(
                 function () {
                     return {action: action};
                 }
@@ -97,7 +134,6 @@ define(function (require) {
         }
 
         var pageInfo = result[1];
-
         !firstScreen && (page.main.innerHTML = pageInfo.content || '');
 
         action.state = route.navOpts.state;
@@ -111,6 +147,8 @@ define(function (require) {
         var model = action.model;
         model.fill(getSyncData('model'));
         model.set(globalConfig.syncDataKey, pageInfo.data);
+
+        extend(model, modelExtension);
 
         return Resolver.resolved({action: action});
     }

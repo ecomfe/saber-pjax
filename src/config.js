@@ -48,6 +48,13 @@ define({
     syncDataKey: '__spjax__',
 
     /**
+     * 页面访问查询参数的存储 key
+     *
+     * @type {string}
+     */
+    pageQueryKey: '_query',
+
+    /**
      * 视图配置
      * 参见`saber-viewport`的全局配置参数
      * https://github.com/ecomfe/saber-viewport
