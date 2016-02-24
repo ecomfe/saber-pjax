@@ -111,6 +111,20 @@ saberPjax.start('viewport', config);
     * pjax `boolean` `optional`: 是否对当前路由禁用 `pjax` 导航，默认都是支持的，对于不支持的路由，访问该链接，会导致页面重新加载，而不是通过发送 `ajax` 请求进行页面局部区域的更新。
 
 
+## Demo
+```shell
+npm install edpx-mobile
+edpm import saber-ajax@2.1.0 fastclick@1.0.6 saber-mm@1.0.1 saber-viewport@1.1.0
+edpm start
+open http://localhost:8848/demo/index.html
+```
+## Test 
+
+```shell
+npm install
+npm test
+```
+
 ## Reference
 
 关于 `saber` 使用更多文档可以参考 [这里](http://ecomfe.github.io/saber/doc/)。
