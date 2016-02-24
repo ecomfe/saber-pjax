@@ -56,14 +56,14 @@ saberPjax.start('viewport', config);
 
 * Model 扩展 api
 
-    * getPageQuery(key): 获取当前访问页面的查询参数信息
+    * getPageQuery(key): 获取当前访问页面的查询参数信息。
     
         ```javascript
         var allQueryInfo = model.getPageQuery();
         var specifyQueryKeyValue = model.getPageQuery(key);
         ```
         
-    * getSyncData(key): 获取当前页面同步的数据信息
+    * getSyncData(key): 获取当前页面同步的数据信息。
         
         ```javascript
         var allSyncDataInfo = model.getSyncData();
@@ -72,19 +72,19 @@ saberPjax.start('viewport', config);
             
 * 不支持全局配置项
 
-    * path: 默认访问路径
+    * path: 默认访问路径。
     
 * 新增全局配置项
     
-    * pageQueryKey: 页面查询 key，访问的页面的 url 查询参数信息，可以通过 model 扩展 api: `getPageQuery` 或者，或者直接通过 `model.get(pageQueryKey)` 获取
+    * pageQueryKey: 页面查询 key，用于存储访问的页面的 url 查询参数信息，可以通过 model 的扩展 api: `getPageQuery` 获取，或者直接通过 `model.get(pageQueryKey)` 获取。
     
-    * ajax `Object` `optional`: 导航请求页面内容使用的 `ajax` 模块，默认使用 `saber-ajax` 模块
+    * ajax `Object` `optional`: 导航请求页面内容使用的 `ajax` 模块，默认使用 `saber-ajax` 模块。
 
-    * fetch `Function` `optional`: 请求导航页面内容的接口，默认基于默认 `ajax` 模块实现
+    * fetch `Function` `optional`: 请求导航页面内容的接口，默认基于默认 `ajax` 模块实现。
     
-    * pjaxParams `Function|Object` `optional`: 请求导航页面内容发送 pjax 请求的参数，默认 `{_pjax: true}`，后端实现可以通过是否存在 `_pjax` 参考来控制返回的是页面片段还是完整的页面文档
+    * pjaxParams `Function|Object` `optional`: 请求导航页面内容发送 pjax 请求的参数，默认 `{_pjax: true}`，后端实现可以通过是否存在 `_pjax` 参数来控制返回的是页面片段还是完整的页面文档。
     
-    * pjaxParser `Function` `optional`: 可以通过该接口实现对于响应内容的解析预处理
+    * pjaxParser `Function` `optional`: 可以通过该接口实现对于响应内容的解析预处理。
     
         ```javascript
         {
@@ -100,13 +100,13 @@ saberPjax.start('viewport', config);
             }
         }
         ```
-    * firstScreenData `Object` `optional`: 设置首屏要同步的数据
+    * firstScreenData `Object` `optional`: 设置首屏要同步的数据。
     
     * maxCacheSize `number` `optional`: 历史导航记录栈允许缓存的最大 页面（action）实例数量，默认 `20`。对于路由规则里，强制使用 `cached` 为 true 的缓存页面不算在导航历史记录栈里，使用独立的缓存。
     
 * 路由规则新增的路由配置项
     
-    * noCache `boolean` `optional`: 是否强制不缓存，框架默认历史前进后退会使用缓存，可以通过该选项来强制不使用缓存
+    * noCache `boolean` `optional`: 是否强制不缓存，框架默认历史前进后退会使用缓存，可以通过该选项来强制不使用缓存。
     
     * pjax `boolean` `optional`: 是否对当前路由禁用 `pjax` 导航，默认都是支持的，对于不支持的路由，访问该链接，会导致页面重新加载，而不是通过发送 `ajax` 请求进行页面局部区域的更新。
 
