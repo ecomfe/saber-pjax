@@ -134,6 +134,14 @@ define(function (require) {
         }
 
         var pageInfo = result[1];
+
+        // 设置视图 className
+        var classes = page.main.className.split(/\s+/);
+        var className = action.view.className;
+        if (className && classes.indexOf(className) < 0) {
+            page.main.className += ' ' + className;
+        }
+
         !firstScreen && (page.main.innerHTML = pageInfo.content || '');
 
         action.state = route.navOpts.state;

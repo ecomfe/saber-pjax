@@ -14,6 +14,7 @@ define(function (require) {
                 cat: 'home',
                 page: 'index'
             }
+            // noCache: true // 可以使用该选项强制不使用缓存
         },
         {
             path: '/demo/cached.html',
