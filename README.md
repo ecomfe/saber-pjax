@@ -5,6 +5,14 @@ saber-pjax
 
 >  基于 `saber-mm` 和 `pjax` 移动端多页面应用开发框架
 
+## Install
+
+通过 [edp](https://github.com/ecomfe/edp) 引入模块：
+
+```sh
+edp import saber-pjax
+```
+
 ## Usage
 
 ```javascript
